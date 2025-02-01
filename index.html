@@ -33,6 +33,22 @@
         }
     </style>
     <script>
+        // Mobile detection function
+        function isMobileDevice() {
+            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+        }
+
+        // Check device on page load
+        window.onload = function() {
+            if (isMobileDevice()) {
+                document.getElementById('invitation-content').style.display = 'none';
+                document.getElementById('mobile-warning').style.display = 'block';
+            } else {
+                document.getElementById('invitation-content').style.display = 'block';
+                document.getElementById('mobile-warning').style.display = 'none';
+            }
+        }
+
         function moveNoButton() {
             const noButton = document.getElementById("no-btn");
             let currentXPosition = parseInt(noButton.style.transform.replace("translateX(", "").replace("px)", "").split(",")[0]) || 0;
@@ -52,14 +68,13 @@
             `;
             
             // Enhanced confetti celebration
-            const duration = 5 * 1000; // Extended to 5 seconds
+            const duration = 5 * 1000;
             const animationEnd = Date.now() + duration;
 
             function randomInRange(min, max) {
                 return Math.random() * (max - min) + min;
             }
 
-            // Initial burst of confetti
             confetti({
                 particleCount: 100,
                 spread: 70,
@@ -67,13 +82,11 @@
                 colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
             });
 
-            // Continuous confetti animation
             (function frame() {
                 const timeLeft = animationEnd - Date.now();
 
                 if (timeLeft <= 0) return;
 
-                // Left side confetti
                 confetti({
                     particleCount: 5,
                     angle: 60,
@@ -82,7 +95,6 @@
                     colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
                 });
 
-                // Right side confetti
                 confetti({
                     particleCount: 5,
                     angle: 120,
@@ -97,7 +109,14 @@
     </script>
 </head>
 <body class="bg-gradient-to-r from-pink-500 to-red-600 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6">
-    <div class="bg-white shadow-lg rounded-lg p-6 sm:p-8 max-w-md w-full text-center fade-in">
+    <!-- Mobile Warning -->
+    <div id="mobile-warning" class="bg-white shadow-lg rounded-lg p-6 sm:p-8 max-w-md w-full text-center fade-in" style="display: none;">
+       
+        <p class="text-gray-700">Please open it on a computer for the full experience! 💕</p>
+    </div>
+
+    <!-- Main Invitation Content -->
+    <div id="invitation-content" class="bg-white shadow-lg rounded-lg p-6 sm:p-8 max-w-md w-full text-center fade-in">
         <div id="main-content">
             <h1 class="text-4xl font-bold text-red-500 mb-4">Hey Arielle, ❤️</h1>
             <p class="text-gray-700 text-lg mb-6">Would you like to go out with me on Valentine's Day? 💕</p>
