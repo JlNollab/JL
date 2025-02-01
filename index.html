@@ -6,13 +6,38 @@
     <title>Valentine's Day Invitation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .heart-beat {
+            animation: heartBeat 0.8s infinite;
+        }
+    </style>
     <script>
         function moveNoButton() {
             const noButton = document.getElementById("no-btn");
             let currentXPosition = parseInt(noButton.style.transform.replace("translateX(", "").replace("px)", "").split(",")[0]) || 0;
             let currentYPosition = parseInt(noButton.style.transform.replace("translateY(", "").replace("px)", "").split(",")[1]) || 0;
             
-            // Randomly move the button up, down, left, or right
             let newXPosition = currentXPosition + (Math.random() > 0.5 ? 100 : -100);
             let newYPosition = currentYPosition + (Math.random() > 0.5 ? 100 : -100);
             
@@ -20,38 +45,50 @@
         }
 
         function celebrateYes() {
-            // Change the content to show celebration
+            // Change the content to show celebration with beating heart animation
             document.getElementById('main-content').innerHTML = `
                 <h1 class="text-4xl font-bold text-red-500 mb-4">Yay! 🎉</h1>
-                <p class="text-gray-700 text-lg mb-6">I knew you would say yes!! ❤️</p>
+                <p class="text-gray-700 text-lg mb-6">I knew you would say yes!! <span class="heart-beat inline-block">❤️</span></p>
             `;
             
-            // Trigger confetti
-            const duration = 3 * 1000;
+            // Enhanced confetti celebration
+            const duration = 5 * 1000; // Extended to 5 seconds
             const animationEnd = Date.now() + duration;
 
             function randomInRange(min, max) {
                 return Math.random() * (max - min) + min;
             }
 
+            // Initial burst of confetti
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
+            });
+
+            // Continuous confetti animation
             (function frame() {
                 const timeLeft = animationEnd - Date.now();
 
                 if (timeLeft <= 0) return;
 
+                // Left side confetti
                 confetti({
-                    particleCount: 3,
+                    particleCount: 5,
                     angle: 60,
                     spread: 55,
-                    origin: { x: 0 },
-                    colors: ['#ff0000', '#ff69b4', '#ff1493']
+                    origin: { x: 0, y: 0.6 },
+                    colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
                 });
+
+                // Right side confetti
                 confetti({
-                    particleCount: 3,
+                    particleCount: 5,
                     angle: 120,
                     spread: 55,
-                    origin: { x: 1 },
-                    colors: ['#ff0000', '#ff69b4', '#ff1493']
+                    origin: { x: 1, y: 0.6 },
+                    colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
                 });
 
                 requestAnimationFrame(frame);
@@ -60,7 +97,7 @@
     </script>
 </head>
 <body class="bg-gradient-to-r from-pink-500 to-red-600 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6">
-    <div class="bg-white shadow-lg rounded-lg p-6 sm:p-8 max-w-md w-full text-center">
+    <div class="bg-white shadow-lg rounded-lg p-6 sm:p-8 max-w-md w-full text-center fade-in">
         <div id="main-content">
             <h1 class="text-4xl font-bold text-red-500 mb-4">Hey Arielle, ❤️</h1>
             <p class="text-gray-700 text-lg mb-6">Would you like to go out with me on Valentine's Day? 💕</p>
