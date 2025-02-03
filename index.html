@@ -63,6 +63,10 @@
             position: relative;
         }
     </style>
+    
+    <!-- Confetti Library (Load First) -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0"></script>
+
 </head>
 <body class="bg-gradient-to-r from-pink-500 to-red-600 min-h-screen flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full fade-in">
@@ -102,6 +106,7 @@
                 <p class="text-gray-700 text-xl mb-6">I knew you would say yes!! <span class="heart-beat inline-block">❤️</span></p>
             `;
 
+            // Ensure confetti is loaded before using it
             if (typeof confetti !== "undefined") {
                 const duration = 5 * 1000;
                 const animationEnd = Date.now() + duration;
@@ -137,16 +142,19 @@
                 };
                 frame();
             } else {
-                console.error("Confetti library is not loaded.");
+                console.error("Confetti library did not load.");
             }
         }
 
+        // Ensure the event is set up correctly
         window.onload = function() {
-            document.getElementById("yes-btn").onclick = celebrateYes;
+            const yesButton = document.getElementById("yes-btn");
+            if (yesButton) {
+                yesButton.onclick = celebrateYes;
+            } else {
+                console.error("Yes button not found.");
+            }
         };
     </script>
-
-    <!-- Moved confetti script to load at the end -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
 </body>
 </html>
