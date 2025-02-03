@@ -32,7 +32,7 @@
             animation: heartBeat 0.8s infinite;
         }
 
-        /* Ensure no button moves within boundaries */
+        /* Ensure No button moves inside the container */
         .no-btn {
             position: absolute;
             transition: transform 0.2s ease-in-out;
@@ -60,10 +60,6 @@
 
             const duration = 5 * 1000;
             const animationEnd = Date.now() + duration;
-
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
 
             confetti({
                 particleCount: 100,
@@ -103,7 +99,7 @@
             <h1 class="text-4xl font-bold text-red-500 mb-4">Hey Arielle, ❤️</h1>
             <p class="text-gray-700 text-lg mb-6">Would you like to go out with me on Valentine's Day? 💕</p>
             
-            <div id="button-container" class="relative w-full h-24 flex justify-center items-center">
+            <div id="button-container" class="relative w-full h-24 flex justify-center items-center space-x-4">
                 <button onclick="celebrateYes()" 
                     class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition">
                     Yes 😊
