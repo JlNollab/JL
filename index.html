@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello Arielle</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
     <style>
         @keyframes fadeIn {
             from {
@@ -64,6 +63,24 @@
             position: relative;
         }
     </style>
+</head>
+<body class="bg-gradient-to-r from-pink-500 to-red-600 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full fade-in">
+        <div id="main-content" class="text-center">
+            <h1 class="text-4xl font-bold text-red-500 mb-6">Hey Arielle, ❤️</h1>
+            <p class="text-gray-700 text-xl mb-8">Would you like to go out with me on Valentine's Day? 💕</p>
+            
+            <div class="button-container h-24">
+                <button id="yes-btn" class="btn yes-btn">
+                    Yes 😊
+                </button>
+                <button id="no-btn" class="btn no-btn" onmouseover="moveNoButton()" ontouchstart="moveNoButton()">
+                    No 😢
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function moveNoButton() {
             const noButton = document.getElementById("no-btn");
@@ -85,57 +102,51 @@
                 <p class="text-gray-700 text-xl mb-6">I knew you would say yes!! <span class="heart-beat inline-block">❤️</span></p>
             `;
 
-            const duration = 5 * 1000;
-            const animationEnd = Date.now() + duration;
-
-            confetti({
-                particleCount: 100,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
-            });
-
-            const frame = () => {
-                const timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) return;
+            if (typeof confetti !== "undefined") {
+                const duration = 5 * 1000;
+                const animationEnd = Date.now() + duration;
 
                 confetti({
-                    particleCount: 5,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0, y: 0.6 },
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 },
                     colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
                 });
 
-                confetti({
-                    particleCount: 5,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1, y: 0.6 },
-                    colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
-                });
+                const frame = () => {
+                    const timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) return;
 
-                requestAnimationFrame(frame);
-            };
-            frame();
+                    confetti({
+                        particleCount: 5,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0, y: 0.6 },
+                        colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
+                    });
+
+                    confetti({
+                        particleCount: 5,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1, y: 0.6 },
+                        colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
+                    });
+
+                    requestAnimationFrame(frame);
+                };
+                frame();
+            } else {
+                console.error("Confetti library is not loaded.");
+            }
         }
+
+        window.onload = function() {
+            document.getElementById("yes-btn").onclick = celebrateYes;
+        };
     </script>
-</head>
-<body class="bg-gradient-to-r from-pink-500 to-red-600 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full fade-in">
-        <div id="main-content" class="text-center">
-            <h1 class="text-4xl font-bold text-red-500 mb-6">Hey Arielle, ❤️</h1>
-            <p class="text-gray-700 text-xl mb-8">Would you like to go out with me on Valentine's Day? 💕</p>
-            
-            <div class="button-container h-24">
-                <button onclick="celebrateYes()" class="btn yes-btn">
-                    Yes 😊
-                </button>
-                <button id="no-btn" class="btn no-btn" onmouseover="moveNoButton()" ontouchstart="moveNoButton()">
-                    No 😢
-                </button>
-            </div>
-        </div>
-    </div>
+
+    <!-- Moved confetti script to load at the end -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
 </body>
 </html>
