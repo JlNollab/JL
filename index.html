@@ -31,43 +31,33 @@
         .heart-beat {
             animation: heartBeat 0.8s infinite;
         }
+
+        /* Ensure no button moves within boundaries */
+        .no-btn {
+            position: absolute;
+            transition: transform 0.2s ease-in-out;
+        }
     </style>
     <script>
-        // Mobile detection function
-        function isMobileDevice() {
-            return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
-        }
-
-        // Check device on page load
-        window.onload = function() {
-            if (isMobileDevice()) {
-                document.getElementById('invitation-content').style.display = 'none';
-                document.getElementById('mobile-warning').style.display = 'block';
-            } else {
-                document.getElementById('invitation-content').style.display = 'block';
-                document.getElementById('mobile-warning').style.display = 'none';
-            }
-        }
-
         function moveNoButton() {
             const noButton = document.getElementById("no-btn");
-            let currentXPosition = parseInt(noButton.style.transform.replace("translateX(", "").replace("px)", "").split(",")[0]) || 0;
-            let currentYPosition = parseInt(noButton.style.transform.replace("translateY(", "").replace("px)", "").split(",")[1]) || 0;
-            
-            let newXPosition = currentXPosition + (Math.random() > 0.5 ? 100 : -100);
-            let newYPosition = currentYPosition + (Math.random() > 0.5 ? 100 : -100);
-            
-            noButton.style.transform = `translate(${newXPosition}px, ${newYPosition}px)`;
+            const container = document.getElementById("button-container");
+
+            const maxWidth = container.clientWidth - noButton.clientWidth;
+            const maxHeight = container.clientHeight - noButton.clientHeight;
+
+            let newX = Math.random() * maxWidth;
+            let newY = Math.random() * maxHeight;
+
+            noButton.style.transform = `translate(${newX}px, ${newY}px)`;
         }
 
         function celebrateYes() {
-            // Change the content to show celebration with beating heart animation
             document.getElementById('main-content').innerHTML = `
                 <h1 class="text-4xl font-bold text-red-500 mb-4">Yay! 🎉</h1>
                 <p class="text-gray-700 text-lg mb-6">I knew you would say yes!! <span class="heart-beat inline-block">❤️</span></p>
             `;
-            
-            // Enhanced confetti celebration
+
             const duration = 5 * 1000;
             const animationEnd = Date.now() + duration;
 
@@ -84,7 +74,6 @@
 
             (function frame() {
                 const timeLeft = animationEnd - Date.now();
-
                 if (timeLeft <= 0) return;
 
                 confetti({
@@ -108,27 +97,19 @@
         }
     </script>
 </head>
-<body class="bg-gradient-to-r from-pink-500 to-red-600 flex flex-col items-center justify-center min-h-screen p-4 sm:p-6">
-    <!-- Mobile Warning -->
-    <div id="mobile-warning" class="bg-white shadow-lg rounded-lg p-6 sm:p-8 max-w-md w-full text-center fade-in" style="display: none;">
-       
-        <p class="text-gray-700">Please open it on a computer for the full experience! 💕</p>
-    </div>
-
-    <!-- Main Invitation Content -->
-    <div id="invitation-content" class="bg-white shadow-lg rounded-lg p-6 sm:p-8 max-w-md w-full text-center fade-in">
+<body class="bg-gradient-to-r from-pink-500 to-red-600 flex flex-col items-center justify-center min-h-screen p-4">
+    <div id="invitation-content" class="bg-white shadow-lg rounded-lg p-6 sm:p-8 max-w-md w-full text-center fade-in relative">
         <div id="main-content">
             <h1 class="text-4xl font-bold text-red-500 mb-4">Hey Arielle, ❤️</h1>
             <p class="text-gray-700 text-lg mb-6">Would you like to go out with me on Valentine's Day? 💕</p>
             
-            <div class="flex justify-center space-x-4">
+            <div id="button-container" class="relative w-full h-24 flex justify-center items-center">
                 <button onclick="celebrateYes()" 
                     class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition">
                     Yes 😊
                 </button>
-                <button id="no-btn" 
-                    class="bg-gray-500 text-white px-6 py-2 rounded-lg transition"
-                    onmouseover="moveNoButton()">
+                <button id="no-btn" class="no-btn bg-gray-500 text-white px-6 py-2 rounded-lg transition"
+                    onmouseover="moveNoButton()" ontouchstart="moveNoButton()">
                     No 😢
                 </button>
             </div>
