@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello Arielle</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load confetti directly from jsDelivr CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         @keyframes fadeIn {
             from {
@@ -37,6 +39,7 @@
             justify-content: center;
             gap: 2rem;
             margin-top: 2rem;
+            height: 200px;
         }
 
         .btn {
@@ -45,11 +48,13 @@
             font-weight: 600;
             transition: all 0.2s;
             font-size: 1.1rem;
+            white-space: nowrap;
         }
 
         .yes-btn {
             background-color: #22c55e;
             color: white;
+            z-index: 2;
         }
 
         .yes-btn:hover {
@@ -60,44 +65,39 @@
         .no-btn {
             background-color: #6b7280;
             color: white;
-            position: relative;
+            position: absolute;
+            transition: all 0.3s ease-out;
         }
     </style>
-    
-    <!-- Confetti Library (Load First) -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0"></script>
-
-</head>
-<body class="bg-gradient-to-r from-pink-500 to-red-600 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full fade-in">
-        <div id="main-content" class="text-center">
-            <h1 class="text-4xl font-bold text-red-500 mb-6">Hey Arielle, ❤️</h1>
-            <p class="text-gray-700 text-xl mb-8">Would you like to go out with me on Valentine's Day? 💕</p>
-            
-            <div class="button-container h-24">
-                <button id="yes-btn" class="btn yes-btn">
-                    Yes 😊
-                </button>
-                <button id="no-btn" class="btn no-btn" onmouseover="moveNoButton()" ontouchstart="moveNoButton()">
-                    No 😢
-                </button>
-            </div>
-        </div>
-    </div>
-
     <script>
+        const positions = [
+            { x: -100, y: -50 },
+            { x: 100, y: -50 },
+            { x: -100, y: 50 },
+            { x: 100, y: 50 },
+            { x: 0, y: -80 },
+            { x: 0, y: 80 },
+            { x: -120, y: 0 },
+            { x: 120, y: 0 }
+        ];
+        
+        let lastPosition = -1;
+
         function moveNoButton() {
             const noButton = document.getElementById("no-btn");
-            const container = document.querySelector('.button-container');
-            const containerRect = container.getBoundingClientRect();
             
-            const maxX = containerRect.width - noButton.offsetWidth;
-            const maxY = containerRect.height - noButton.offsetHeight;
+            let newPositionIndex;
+            do {
+                newPositionIndex = Math.floor(Math.random() * positions.length);
+            } while (newPositionIndex === lastPosition);
             
-            const randomX = Math.random() * maxX - maxX / 2;
-            const randomY = Math.random() * maxY - maxY / 2;
+            lastPosition = newPositionIndex;
+            const position = positions[newPositionIndex];
             
-            noButton.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            const variationX = (Math.random() - 0.5) * 20;
+            const variationY = (Math.random() - 0.5) * 20;
+            
+            noButton.style.transform = `translate(${position.x + variationX}px, ${position.y + variationY}px)`;
         }
 
         function celebrateYes() {
@@ -106,55 +106,52 @@
                 <p class="text-gray-700 text-xl mb-6">I knew you would say yes!! <span class="heart-beat inline-block">❤️</span></p>
             `;
 
-            // Ensure confetti is loaded before using it
-            if (typeof confetti !== "undefined") {
-                const duration = 5 * 1000;
-                const animationEnd = Date.now() + duration;
-
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 },
-                    colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
-                });
-
-                const frame = () => {
-                    const timeLeft = animationEnd - Date.now();
-                    if (timeLeft <= 0) return;
-
-                    confetti({
-                        particleCount: 5,
-                        angle: 60,
-                        spread: 55,
-                        origin: { x: 0, y: 0.6 },
-                        colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
-                    });
-
-                    confetti({
-                        particleCount: 5,
-                        angle: 120,
-                        spread: 55,
-                        origin: { x: 1, y: 0.6 },
-                        colors: ['#ff0000', '#ff69b4', '#ff1493', '#ffffff', '#ff8c00']
-                    });
-
-                    requestAnimationFrame(frame);
-                };
-                frame();
-            } else {
-                console.error("Confetti library did not load.");
+            // Create a simple confetti effect using emoji and CSS
+            for (let i = 0; i < 50; i++) {
+                createConfettiEmoji();
             }
         }
 
-        // Ensure the event is set up correctly
-        window.onload = function() {
-            const yesButton = document.getElementById("yes-btn");
-            if (yesButton) {
-                yesButton.onclick = celebrateYes;
-            } else {
-                console.error("Yes button not found.");
-            }
-        };
+        function createConfettiEmoji() {
+            const emojis = ['🎉', '❤️', '💕', '💝', '💖'];
+            const confetti = document.createElement('span');
+            confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            confetti.style.position = 'fixed';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = '-20px';
+            confetti.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+            confetti.style.transition = 'all 3s linear';
+            document.body.appendChild(confetti);
+
+            // Animate falling
+            setTimeout(() => {
+                confetti.style.top = '100vh';
+                confetti.style.transform = `rotate(${Math.random() * 360}deg) translateX(${Math.random() * 100 - 50}px)`;
+            }, 100);
+
+            // Remove after animation
+            setTimeout(() => {
+                confetti.remove();
+            }, 3000);
+        }
     </script>
+</head>
+<body class="bg-gradient-to-r from-pink-500 to-red-600 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full fade-in">
+        <div id="main-content" class="text-center">
+            <h1 class="text-4xl font-bold text-red-500 mb-6">Hey Arielle, ❤️</h1>
+            <p class="text-gray-700 text-xl mb-8">Would you like to go out with me on Valentine's Day? 💕</p>
+            
+            <div class="button-container">
+                <button onclick="celebrateYes()" class="btn yes-btn">
+                    Yes 😊
+                </button>
+                <button id="no-btn" class="btn no-btn" onmouseover="moveNoButton()" ontouchstart="moveNoButton()">
+                    No 😢
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
